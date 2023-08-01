@@ -12,7 +12,6 @@ import {
 import storage from 'redux-persist/lib/storage';
 import { filterSliceReducer } from './slices/filterSlice';
 import { contactsSliceReducer } from './slices/contactsSlice';
-import { formInputSliceReducer } from './slices/formInputSlice';
 
 const contactsPersistConfig = {
   key: 'contacts',
@@ -22,7 +21,6 @@ const contactsPersistConfig = {
 
 export const store = configureStore({
   reducer: {
-    formInput: formInputSliceReducer,
     contactsFilter: filterSliceReducer,
     contacts: persistReducer(contactsPersistConfig, contactsSliceReducer),
   },

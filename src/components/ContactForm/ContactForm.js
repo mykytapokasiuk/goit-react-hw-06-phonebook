@@ -1,35 +1,33 @@
-import React from 'react';
+import React, { useState, useId } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setNameInput, setNumberInput } from 'redux/slices/formInputSlice';
 import { addContact } from 'redux/slices/contactsSlice';
-import { nanoid } from 'nanoid';
+import { selectContacts } from 'redux/selectors';
 import css from './ContactForm.module.css';
 
 const ContactForm = () => {
-  const nameInput = useSelector(state => state.formInput.name);
-  const numberInput = useSelector(state => state.formInput.number);
-  const contacts = useSelector(state => state.contacts.contacts);
+  const [state, setState] = useState({ name: '', number: '' });
+  const contacts = useSelector(selectContacts);
 
   const dispatch = useDispatch();
-  const contactNameId = nanoid();
-  const contactNumberId = nanoid();
+  const contactNameId = useId();
+  const contactNumberId = useId();
 
   const handleChange = event => {
-    const { value, name } = event.target;
-    name === 'name'
-      ? dispatch(setNameInput(value))
-      : dispatch(setNumberInput(value));
+    const { name, value } = event.target;
+    setState(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    onAddContact(nameInput, numberInput);
+    onAddContact(state);
     reset();
   };
 
   const reset = () => {
-    dispatch(setNameInput(''));
-    dispatch(setNumberInput(''));
+    setState(() => ({ name: '', number: '' }));
   };
 
   const onAddContact = (name, number) => {
@@ -43,7 +41,7 @@ const ContactForm = () => {
     const newContact = {
       name,
       number,
-      id: nanoid(),
+      id: useId(),
     };
     dispatch(addContact(newContact));
   };

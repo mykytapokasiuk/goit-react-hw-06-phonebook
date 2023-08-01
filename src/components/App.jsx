@@ -1,12 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { selectContacts } from 'redux/selectors.js';
 import ContactForm from './ContactForm/ContactForm.js';
 import Filter from './Filter/Filter.js';
 import ContactList from './ContactList/ContactList.js';
 import css from './App.module.css';
 
 const App = () => {
-  const contacts = useSelector(state => state.contacts.contacts);
+  const contacts = useSelector(selectContacts);
   return (
     <div className={css.app}>
       <div className={css.container}>
