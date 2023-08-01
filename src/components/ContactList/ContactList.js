@@ -9,6 +9,7 @@ const ContactList = () => {
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
+  console.log(contacts);
 
   const onRemoveContact = contactId => dispatch(deleteContact(contactId));
 

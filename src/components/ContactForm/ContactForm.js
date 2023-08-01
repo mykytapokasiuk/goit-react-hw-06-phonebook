@@ -1,11 +1,13 @@
 import React, { useState, useId } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { nanoid } from '@reduxjs/toolkit';
 import { addContact } from 'redux/slices/contactsSlice';
 import { selectContacts } from 'redux/selectors';
 import css from './ContactForm.module.css';
 
 const ContactForm = () => {
-  const [state, setState] = useState({ name: '', number: '' });
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
   const contacts = useSelector(selectContacts);
 
   const dispatch = useDispatch();
@@ -14,20 +16,18 @@ const ContactForm = () => {
 
   const handleChange = event => {
     const { name, value } = event.target;
-    setState(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
+    name === 'name' ? setName(value) : setNumber(value);
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    onAddContact(state);
+    onAddContact(name, number);
     reset();
   };
 
   const reset = () => {
-    setState(() => ({ name: '', number: '' }));
+    setName('');
+    setNumber('');
   };
 
   const onAddContact = (name, number) => {
@@ -41,7 +41,7 @@ const ContactForm = () => {
     const newContact = {
       name,
       number,
-      id: useId(),
+      id: nanoid(),
     };
     dispatch(addContact(newContact));
   };
@@ -54,7 +54,7 @@ const ContactForm = () => {
           type="text"
           name="name"
           placeholder="Enter your name"
-          value={nameInput}
+          value={name}
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           id={contactNameId}
@@ -66,7 +66,7 @@ const ContactForm = () => {
           type="tel"
           name="number"
           placeholder="Enter your phone"
-          value={numberInput}
+          value={number}
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           pattern="\+?\d{1,4}?[\-.\s]?\(?\d{1,3}?\)?[\-.\s]?\d{1,4}[\-.\s]?\d{1,4}[\-.\s]?\d{1,9}"
           id={contactNumberId}
